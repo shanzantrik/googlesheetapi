@@ -1,0 +1,25 @@
+/* Custom styles for the banner */
+.custom-banner {
+    background-color: #9c6a6a;
+    max-height: 40px;
+    color: #fff;
+    padding: 10px 0 10px 0;
+    width: 100%; 
+    z-index: 9999;
+    text-align: center;
+    /* font-size: 18px; */
+}
+
+@media only screen and (max-width: 544px) and (min-width: 425px)  {
+    
+    .custom-banner {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 424px)  {
+    
+    .custom-banner {
+        font-size: 11px;
+    }
+}
