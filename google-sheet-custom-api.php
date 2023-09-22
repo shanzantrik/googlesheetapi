@@ -5,6 +5,8 @@ Description: Display data from Google Sheet in a top banner.
 Version: 1.0
 Author: Practical Logix Shantanu
 */
+
+if ( ! defined( 'ABSPATH' ) ) exit;
 // Add the top banner to the header
 function enqueue_custom_banner_styles() {
     // Enqueue the custom stylesheet
@@ -28,15 +30,15 @@ function fetch_data_from_google_sheet() {
     //Dev Credentials
     // $api_key = 'AIzaSyDKZoT0pUmHelHKIhdSWz_pVcRRKLVfkbw';
     // $spreadsheet_id = '1_fpRlfmlFfab7RN2PqJ7dpLchTv501SBU0dYaluXo6o';
-    // $range = "'a2023'!A2:I78"; 
+    // $range = "'a2023'!A2:I78";
     //Production Credentials
     $api_key = 'AIzaSyC6s6NYVHPnil7H0VHyLvARZ2fEueUa7sc';
     $spreadsheet_id = '1BwIIG7eXZB8tDA7I6suf7503kXf5phrKH_i87UywPwE';
-    $range = "'2023'!A2:H390"; 
-    
+    $range = "'2023'!A2:H390";
+
     $api_url = "https://sheets.googleapis.com/v4/spreadsheets/{$spreadsheet_id}/values/{$range}?key={$api_key}";
     $response = wp_remote_get($api_url);
-    
+
     if (is_array($response) && !is_wp_error($response)) {
         $data = json_decode($response['body'], true);
 
@@ -88,7 +90,7 @@ function custom_google_sheet_banner_shortcode() {
         $start_dates = $data['start_dates']; // An array of start dates
         $end_dates =  $data['end_dates'];   // An array of end dates
         $banner_languages =  $data['banner_languages']; // An array of banner languages
- 
+
         if (count($start_dates) === count($end_dates) && count($start_dates) === count($banner_languages)) {
             $current_date = new DateTime("now", new DateTimeZone('America/New_York'));
             $current_date = $current_date->format("Y-m-d");
@@ -105,9 +107,9 @@ function custom_google_sheet_banner_shortcode() {
 
                 // Check if the current date is within the range of start date and end date
                 if ($current_date >= $start_date_obj && $current_date <= $end_date_obj) {
-                   
+
                     $banner_language = $banner_languages[$i];
-                    
+
                     if ($banner_language !== null) {
                         $learn_more_link = '<a href="https://www.saatva.com/" target="_blank" style="color: #fff !important; text-decoration: underline;">Learn More</a>';
                         $banner_language = str_replace('Learn More', $learn_more_link, $banner_language);
@@ -118,19 +120,19 @@ function custom_google_sheet_banner_shortcode() {
                     return $banner_language;
                 } else if ($current_date == $start_date_obj || $current_date == $end_date_obj) {
                     $banner_language = $banner_languages[$i];
-                    
+
                     if ($banner_language !== null) {
 
                         $learn_more_link = '<a href="https://www.saatva.com/" target="_blank" style="color: #fff !important; text-decoration: underline;">Learn More</a>';
                         $banner_language = str_replace('Learn More', $learn_more_link, $banner_language);
                         $banner_language = str_replace("| Ends XX/XX", '', $banner_language);
                     }
-                    
+
                     // Display the corresponding banner language
                     return $banner_language.$start_date_obj;
                 }
             }
-         
+
         }
 
         // Default output if the current date is not within any range
